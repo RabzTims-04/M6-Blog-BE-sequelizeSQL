@@ -3,6 +3,9 @@ import { Author } from "../../db/index.js"
 import sequelize from "sequelize"
 import createError from 'http-errors'
 import { queryFilter } from "../../lib/query/query.js"
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary"
+import { CloudinaryStorage } from "multer-storage-cloudinary"
 
 const { Op } = sequelize
 const authorsRouter = express.Router()
@@ -70,6 +73,41 @@ authorsRouter.route("/:id")
         else{
             res.send("error while deleting")
         }
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+})
+
+const cloudinaryStorage = new CloudinaryStorage({
+    cloudinary,
+    params:{
+    folder:"blogs"
+    }
+})
+
+const uploadOnCloudinary = multer({ storage: cloudinaryStorage}).single("avatar")
+
+authorsRouter.route("/:authorId/profile")
+.post( uploadOnCloudinary, async (req, res, next) => {
+    try {
+        const authorId = req.params.authorId
+        const newProfile = { avatar: req.file.path }
+        const url = newProfile.avatar
+        const author = await Author.findByPk(authorId)
+        console.log(url);
+        if(author){
+            author.avatar = url
+            const avatarData = await Author.update({avatar:url}, {
+              where: {
+                  id: authorId
+              },
+              returning:true
+          })
+          console.log(avatarData);
+
+            res.send(avatarData[1][0]);
+        } 
     } catch (error) {
         console.log(error);
         next(error)

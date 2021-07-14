@@ -33,7 +33,7 @@ const Blog = sequelize.define('blog', {
         allowNull: false,
     },
     content: {
-        type: DataTypes.TEXT('long'),
+        type: DataTypes.TEXT,
         allowNull: false,
     }
 })
