@@ -1,1 +1,1 @@
-# M6-Blog-BE-sequelizeSQL
+# M6-Blog-BE-sequelize-SQL
