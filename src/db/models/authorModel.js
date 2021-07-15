@@ -17,12 +17,15 @@ const Author = sequelize.define('author', {
         allowNull: false,
     },
     avatar: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
     email: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
+        validate: {
+            isEmail: true
+        }
     }
 })
 

@@ -8,16 +8,12 @@ const Blog = sequelize.define('blog', {
         primaryKey: true,
         autoIncrement: true
     },
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     title: {
         type: DataTypes.STRING,
         allowNull: false,
     },
     cover: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
     read_time_value: {

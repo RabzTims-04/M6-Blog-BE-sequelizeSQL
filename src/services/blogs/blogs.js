@@ -1,6 +1,6 @@
 import express from "express";
 import sequelize from "sequelize";
-import { Blog, Author } from "../../db/index.js";
+import { Blog, Author, Comment, Category } from "../../db/index.js";
 import { queryFilter } from "../../lib/query/query.js";
 import createError from "http-errors";
 import axios from "axios";
@@ -21,7 +21,26 @@ blogsRouter
     try {
       const filter = queryFilter(req.query)
       const data = await Blog.findAll({
-          where: filter.length > 0 ? {[Op.or]: filter } : {}
+          where: filter.length > 0 ? {[Op.or]: filter } : {},
+          include: [
+            { 
+              model: Author
+            },
+            { 
+              model: Category,
+              attributes:["name", ["id","categoryId"]]
+            },
+            { 
+              model:Comment,
+              attributes:["text", ["id", "commentId"]],
+              include:[
+                {
+                  model:Author,
+                  attributes:["name", "surname", "avatar", ["id", "authorId"]]
+                }
+              ]
+            }  
+          ]
       })
       res.send(data)
     } catch (error) {
