@@ -10,7 +10,7 @@ export const queryFilter = (query) => {
       if (key === "age") {
         element = { [key]: { [Op.eq]: parseInt(query[key]) } };
       } else {
-        element = { [key]: { [Op.substring]: query[key] } };
+        element = { [key]: { [Op.iLike]: `%${query[key]}%` } };
       }
    
       filters.push(element);
